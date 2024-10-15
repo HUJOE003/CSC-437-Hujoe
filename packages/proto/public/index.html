@@ -3,42 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Find haunted locations near you. Discover spooky places with detailed info and user reviews.">
+    <meta name="description" content="Find haunted locations 
+    near you. Discover spooky places with detailed info and user reviews.">
     <title>Haunted Location Finder</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-    
+  
+<!-- <img src="https://media.wired.com/photos/59269cd37034dc5f91bec0f1/master/pass/GoogleMapTA.jpg" alt="Background fr now" width="full" height="full"> -->
+
 <body>
-  <header>
-    <div class="container">
-      <h1>Haunted Location Finder</h1>
-      <p>Discover spooky places near you!</p>
-    </div>
-  </header>
-
-  <main>
-    <section id="search">
+  <div class="mainpagebody">
+    <div style="display: flex;">
+    <header>
       <div class="container">
-        <input type="text" placeholder="Enter a city or haunted place" aria-label="Search for haunted locations">
-        <button type="button">Search</button>
+        <h1>Haunted Location Finder</h1>
+        <p style="margin-top: -20px;">Discover spooky places near you!</p>
       </div>
-    </section>
+    </header>
 
-    <section id="locations">
-      <div class="container">
-        <h2>Haunted Locations</h2>
-      </div>
-    </section>
+      <section id="search">
+        <div class="searchbar">
+          <input style="width: 30vw; border-radius: 20px; height: 30px; padding-left: 20px;" class= "search_bar" type="text" placeholder="Enter a city or haunted place" aria-label="Search for haunted locations">
+          <button style="width: 60px; border-radius: 20px; height: 30px; margin: 5px;" class="button" type="button">Search</button>
+        </div>
+        <div style="margin-top: 10px; margin-left: 50px; display: flex;">
+          <a class="sign" href="Components/SignIn.html">SignIn</a>
+          <a class="sign" href="Components/SignUp.html">SignUp</a>
+        </div>
+        <img style="border-radius: 50%;" src="https://images.scalebranding.com/haunted-house-logo-54bb9bc9-01c2-4c04-90f5-a55a54ad9ae4.jpg" alt="profile pic" width="50" height="50">
+      </section>
 
-    <a href="Components/AddLocation.html">click here</a>
-
-  </main>
-
-  <footer>
-    <div class="container">
-      <p>&copy; 2024 Haunted Location Finder. All rights reserved. Hujoe Pandi Selvan</p>
     </div>
-  </footer>
 
+      <section id="locations">
+        <div class="container">
+          <h2>Haunted Locations</h2>
+        </div>
+      </section>
+
+      <a href="Components/AddLocation.html">Add Location</a><br>
+      <a href="Components/InfoPop.html">Info Pop</a><br>
+      <a href="Components/History.html">History</a><br>
+      <a href="Components/Ratings.html">Ratings</a><br>
+
+  </div>
+    <footer>
+      <div class="footer">
+        <p>&copy; 2024 Haunted Location Finder. All rights reserved. Hujoe Pandi Selvan</p>
+      </div>
+    </footer>
+  
 </body>
 </html>
