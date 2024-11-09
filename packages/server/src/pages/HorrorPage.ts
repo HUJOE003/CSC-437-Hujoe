@@ -3,6 +3,41 @@ import { css, html } from "@calpoly/mustang/server";
 import { HorrorLocation, Review } from "../models";
 import renderPage from "./renderPage"; // generic page renderer
 
+if (typeof window !== 'undefined') {
+  class HorrorReview extends HTMLElement {
+    connectedCallback() {
+      const src = this.getAttribute('src'); // Get the API endpoint from the src attribute
+      if (src) {
+        fetch(src) // Fetch the review data from the API
+          .then(response => response.json()) // Parse the response as JSON
+          .then(data => {
+            // Get the elements using querySelector
+            const reviewerNameSlot = this.querySelector('[slot="reviewer-name"]');
+            const reviewDateSlot = this.querySelector('[slot="review-date"]');
+            const ratingSlot = this.querySelector('[slot="rating"]');
+            const commentSlot = this.querySelector('[slot="comment"]');
+
+            // Only set the textContent if the element exists
+            if (reviewerNameSlot) {
+              reviewerNameSlot.textContent = data.reviewerName;
+            }
+            if (reviewDateSlot) {
+              reviewDateSlot.textContent = new Date(data.reviewDate).toLocaleDateString();
+            }
+            if (ratingSlot) {
+              ratingSlot.textContent = "⭐".repeat(data.rating);
+            }
+            if (commentSlot) {
+              commentSlot.textContent = data.comment;
+            }
+          })
+          .catch(error => console.error('Error loading review data:', error)); // Handle errors
+      }
+    }
+  }
+
+  customElements.define('horror-review', HorrorReview);
+}
 export class HorrorLocationPage {
   data: HorrorLocation;
 
@@ -29,15 +64,26 @@ export class HorrorLocationPage {
   renderReview(review: Review) {
     const { reviewerName, reviewDate, rating, comment } = review;
     
+    // return html`
+    //   <blz-review>
+    //     <span slot="reviewer-name">${reviewerName}</span>
+    //     <time slot="review-date" datetime="${reviewDate.toString()}">
+    //       ${reviewDate.toLocaleDateString()}
+    //     </time>
+    //     <span slot="rating">${"⭐".repeat(rating)}</span>
+    //     <p slot="comment">${comment}</p>
+    //   </blz-review>
+    // `;
     return html`
-      <blz-review>
+      <horror-review src="/api/reviews/${reviewerName}">
+        <!-- Slots will be populated dynamically by the custom element -->
         <span slot="reviewer-name">${reviewerName}</span>
         <time slot="review-date" datetime="${reviewDate.toString()}">
           ${reviewDate.toLocaleDateString()}
         </time>
         <span slot="rating">${"⭐".repeat(rating)}</span>
         <p slot="comment">${comment}</p>
-      </blz-review>
+      </horror-review>
     `;
   }
 

@@ -33,6 +33,34 @@ __export(HorrorPage_exports, {
 module.exports = __toCommonJS(HorrorPage_exports);
 var import_server = require("@calpoly/mustang/server");
 var import_renderPage = __toESM(require("./renderPage"));
+if (typeof window !== "undefined") {
+  class HorrorReview extends HTMLElement {
+    connectedCallback() {
+      const src = this.getAttribute("src");
+      if (src) {
+        fetch(src).then((response) => response.json()).then((data) => {
+          const reviewerNameSlot = this.querySelector('[slot="reviewer-name"]');
+          const reviewDateSlot = this.querySelector('[slot="review-date"]');
+          const ratingSlot = this.querySelector('[slot="rating"]');
+          const commentSlot = this.querySelector('[slot="comment"]');
+          if (reviewerNameSlot) {
+            reviewerNameSlot.textContent = data.reviewerName;
+          }
+          if (reviewDateSlot) {
+            reviewDateSlot.textContent = new Date(data.reviewDate).toLocaleDateString();
+          }
+          if (ratingSlot) {
+            ratingSlot.textContent = "\u2B50".repeat(data.rating);
+          }
+          if (commentSlot) {
+            commentSlot.textContent = data.comment;
+          }
+        }).catch((error) => console.error("Error loading review data:", error));
+      }
+    }
+  }
+  customElements.define("horror-review", HorrorReview);
+}
 class HorrorLocationPage {
   data;
   constructor(data) {
@@ -56,14 +84,15 @@ class HorrorLocationPage {
   renderReview(review) {
     const { reviewerName, reviewDate, rating, comment } = review;
     return import_server.html`
-      <blz-review>
+      <horror-review src="/api/reviews/${reviewerName}">
+        <!-- Slots will be populated dynamically by the custom element -->
         <span slot="reviewer-name">${reviewerName}</span>
         <time slot="review-date" datetime="${reviewDate.toString()}">
           ${reviewDate.toLocaleDateString()}
         </time>
         <span slot="rating">${"\u2B50".repeat(rating)}</span>
         <p slot="comment">${comment}</p>
-      </blz-review>
+      </horror-review>
     `;
   }
   renderImages(images) {
