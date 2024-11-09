@@ -1,4 +1,7 @@
+import { ObjectId } from "mongoose";
+
 export interface HorrorLocation {
+    _id: ObjectId,
     name: string;              // Name of the location (e.g., "Haunted Mansion")
     description: string;       // A description of the location (e.g., "A spooky mansion rumored to be haunted")
     type: HorrorLocationType;  // Type of the location (e.g., haunted house, graveyard)

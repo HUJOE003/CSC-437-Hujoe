@@ -23,9 +23,11 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var import_express = __toESM(require("express"));
 var import_HorrorPage = require("./pages/HorrorPage");
-var import_HorrorPage_svc = require("./services/HorrorPage-svc");
+var import_mongo = require("./services/mongo");
+var import_MongoHorrorPage_svc = require("./services/MongoHorrorPage-svc");
+(0, import_mongo.connect)("CSC-437");
 const app = (0, import_express.default)();
-const port = process.env.PORT || 3003;
+const port = process.env.PORT || 3005;
 const staticDir = process.env.STATIC || "public";
 app.use(import_express.default.static(staticDir));
 app.get("/Hujoe", (req, res) => {
@@ -33,15 +35,22 @@ app.get("/Hujoe", (req, res) => {
 });
 app.get(
   "/horror/:isd",
-  (req, res) => {
+  async (req, res) => {
     const isd = req.params.isd;
-    const data = (0, import_HorrorPage_svc.getHorrorLocation)(isd);
-    if (!data) {
-      res.status(400).send();
-      return;
+    console.log(isd);
+    try {
+      const data = await (0, import_MongoHorrorPage_svc.getHorrorLocation)(isd);
+      console.log("this is data", data);
+      if (!data) {
+        res.status(404).send("Location not found");
+        return;
+      }
+      const page = new import_HorrorPage.HorrorLocationPage(data);
+      res.set("Content-Type", "text/html").send(page.render());
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Internal Server Error");
     }
-    const page = new import_HorrorPage.HorrorLocationPage(data);
-    res.set("Content-Type", "text/html").send(page.render());
   }
 );
 app.listen(port, () => {
