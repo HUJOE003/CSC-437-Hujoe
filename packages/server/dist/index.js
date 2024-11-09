@@ -25,11 +25,14 @@ var import_express = __toESM(require("express"));
 var import_HorrorPage = require("./pages/HorrorPage");
 var import_mongo = require("./services/mongo");
 var import_MongoHorrorPage_svc = require("./services/MongoHorrorPage-svc");
+var import_horrorRoutes = __toESM(require("./routes/horrorRoutes"));
 (0, import_mongo.connect)("CSC-437");
 const app = (0, import_express.default)();
 const port = process.env.PORT || 3005;
 const staticDir = process.env.STATIC || "public";
+app.use(import_express.default.json());
 app.use(import_express.default.static(staticDir));
+app.use("/api/horror", import_horrorRoutes.default);
 app.get("/Hujoe", (req, res) => {
   res.send("Why you know my name bro");
 });

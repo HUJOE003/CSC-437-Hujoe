@@ -18,8 +18,11 @@ var __copyProps = (to, from, except, desc) => {
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var MongoHorrorPage_svc_exports = {};
 __export(MongoHorrorPage_svc_exports, {
+  create: () => create,
   default: () => MongoHorrorPage_svc_default,
-  getHorrorLocation: () => getHorrorLocation
+  getHorrorLocation: () => getHorrorLocation,
+  remove: () => remove,
+  update: () => update
 });
 module.exports = __toCommonJS(MongoHorrorPage_svc_exports);
 var import_mongoose = require("mongoose");
@@ -57,8 +60,41 @@ function getHorrorLocation(name) {
     throw new Error(`${name} nott Found`);
   });
 }
-var MongoHorrorPage_svc_default = { index, getHorrorLocation };
+function create(json) {
+  const newLocation = new HorrorLocationModel(json);
+  return newLocation.save();
+}
+function update(name, updatedLocation) {
+  return HorrorLocationModel.findOneAndUpdate(
+    { name },
+    // Search for the location by name
+    updatedLocation,
+    // The new data to update the location with
+    { new: true }
+    // Returns the updated document
+  ).then((updated) => {
+    if (!updated) throw new Error(`${name} not found or updated`);
+    return updated;
+  }).catch((err) => {
+    console.error(err);
+    throw new Error(`Error updating location: ${err.message}`);
+  });
+}
+function remove(name) {
+  return HorrorLocationModel.findOneAndDelete({ name }).then((deleted) => {
+    if (!deleted) {
+      throw new Error(`Location with name ${name} not found or deleted`);
+    }
+  }).catch((err) => {
+    console.error(err);
+    throw new Error(`Error deleting location: ${err.message}`);
+  });
+}
+var MongoHorrorPage_svc_default = { index, getHorrorLocation, create, update, remove };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  getHorrorLocation
+  create,
+  getHorrorLocation,
+  remove,
+  update
 });

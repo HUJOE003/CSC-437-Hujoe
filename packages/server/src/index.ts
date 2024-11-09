@@ -3,13 +3,19 @@ import express, { Request, Response } from "express";
 import { HorrorLocationPage } from "./pages/HorrorPage";
 import { connect } from "./services/mongo";
 import { getHorrorLocation } from "./services/MongoHorrorPage-svc";
+import router from "./routes/horrorRoutes"
 
 connect("CSC-437");
 const app = express();
+
 const port = process.env.PORT || 3005;
 const staticDir = process.env.STATIC || "public";
 
+// Middleware
+app.use(express.json());
+
 app.use(express.static(staticDir));
+app.use("/api/horror", router);
 
 app.get("/Hujoe", (req: Request, res: Response) => {
     res.send("Why you know my name bro");
