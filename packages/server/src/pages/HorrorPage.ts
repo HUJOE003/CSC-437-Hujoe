@@ -1,8 +1,8 @@
-// src/pages/horror-location.ts
 import { css, html } from "@calpoly/mustang/server";
-import { HorrorLocation, Review } from "../models";
+import { HorrorLocation } from "../models";
 import renderPage from "./renderPage"; // generic page renderer
 
+// Updated to reflect the HorrorLocation interface structure.
 export class HorrorLocationPage {
   data: HorrorLocation;
 
@@ -15,30 +15,17 @@ export class HorrorLocationPage {
       body: this.renderBody(),
       stylesheets: [],
       styles: [
-        css`main.page {
+        css`
+          main.page {
             --page-grids: 8;
             @media screen and (max-width: 48rem) {
               --page-grids: 6;
+            }
           }
-        }`
+        `
       ],
       scripts: [`import { define } from "@calpoly/mustang";`]
     });
-  }
-
-  renderReview(review: Review) {
-    const { reviewerName, reviewDate, rating, comment } = review;
-    
-    return html`
-      <blz-review>
-        <span slot="reviewer-name">${reviewerName}</span>
-        <time slot="review-date" datetime="${reviewDate.toString()}">
-          ${reviewDate.toLocaleDateString()}
-        </time>
-        <span slot="rating">${"⭐".repeat(rating)}</span>
-        <p slot="comment">${comment}</p>
-      </blz-review>
-    `;
   }
 
   renderImages(images: string[]) {
@@ -46,7 +33,7 @@ export class HorrorLocationPage {
       <div class="location-images">
         ${images.map(
           (image) => html`
-            <img src="${image}" alt="View of ${this.data.name}" />
+            <img src="${image}" alt="View of ${this.data.api_data.title}" />
           `
         )}
       </div>
@@ -55,46 +42,36 @@ export class HorrorLocationPage {
 
   renderBody() {
     const {
-      name,
-      description,
-      type,
-      address,
-      coordinates,
-      images,
-      reviews,
-      rating
+      api_data: { title, description, ghost_type, city, state },
+      geometry: { x, y }
     } = this.data;
 
-    const imageGallery = images ? this.renderImages(images) : "";
-    const reviewsList = reviews
-      ? html`<section class="reviews">
-          <h3>Reviews</h3>
-          ${reviews.map((review) => this.renderReview(review))}
-        </section>`
-      : "";
+    // Coordinates from x and y values
+    const coordinates = { latitude: y, longitude: x };
 
     return html`
       <body>
         <main class="horror-location-page">
           <article class="location">
             <header>
-              <h1>${name}</h1>
-              ${rating ? html`<div class="rating">Rating: ${rating}/5</div>` : ""}
+              <h1>${title}</h1>
+              <div class="ghost-type">Ghost Type: ${ghost_type}</div>
             </header>
-            
+
             <section class="location-info">
               <p class="description">${description}</p>
               <div class="details">
-                <p class="type">Type: ${type}</p>
-                <address>${address}</address>
+                <p class="location-type">Location Type: ${this.data.original.location_type}</p>
+                <p class="city">City: ${city}</p>
+                <p class="state">State: ${state}</p>
                 <p class="coordinates">
                   Location: ${coordinates.latitude}, ${coordinates.longitude}
                 </p>
               </div>
             </section>
 
-            ${imageGallery}
-            ${reviewsList}
+            <!-- Placeholder for images if available -->
+            ${this.renderImages([])} 
           </article>
         </main>
       </body>

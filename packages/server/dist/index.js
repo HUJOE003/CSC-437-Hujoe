@@ -24,26 +24,24 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 var import_express = __toESM(require("express"));
 var import_HorrorPage = require("./pages/HorrorPage");
 var import_HorrorPage_svc = require("./services/HorrorPage-svc");
+var import_path = __toESM(require("path"));
 const app = (0, import_express.default)();
-const port = process.env.PORT || 3003;
-const staticDir = process.env.STATIC || "public";
+const port = process.env.PORT || 3007;
+const staticDir = import_path.default.resolve(process.env.STATIC || "public");
 app.use(import_express.default.static(staticDir));
 app.get("/Hujoe", (req, res) => {
   res.send("Why you know my name bro");
 });
-app.get(
-  "/horror/:isd",
-  (req, res) => {
-    const isd = req.params.isd;
-    const data = (0, import_HorrorPage_svc.getHorrorLocation)(isd);
-    if (!data) {
-      res.status(400).send();
-      return;
-    }
-    const page = new import_HorrorPage.HorrorLocationPage(data);
-    res.set("Content-Type", "text/html").send(page.render());
+app.get("/horror/:isd", (req, res) => {
+  const { isd } = req.params;
+  const data = (0, import_HorrorPage_svc.getHorrorLocation)(isd);
+  if (!data) {
+    res.status(404).send(`<h1>Location Not Found</h1><p>The horror location with ID '${isd}' does not exist.</p>`);
+    return;
   }
-);
+  const page = new import_HorrorPage.HorrorLocationPage(data);
+  res.set("Content-Type", "text/html").send(page.render());
+});
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
