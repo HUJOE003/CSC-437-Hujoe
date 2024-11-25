@@ -12,6 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "http-server": "^14.1.1",
+    "leaflet.awesome-markers": "^2.0.5",
+    "leaflet.markercluster": "^1.5.3",
     "react": "^18.3.1",
     "vite": "^5.4.8"
   }

@@ -26,4 +26,3 @@ document.querySelector('.darkmode').addEventListener('darkmode:toggle', function
 
 });
 //---------------------------------Dark Mode----------------------------------------------------
-
