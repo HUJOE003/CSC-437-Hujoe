@@ -1,17 +1,19 @@
-{ 
-    "compilerOptions": 
-{ 
-    "target": "ESNext", 
-    "module": "ESNext", 
-    "baseUrl": "./src",
-    "outDir": "./dist", 
-    "strict": true, 
-    "esModuleInterop": true, 
-    "moduleResolution": "bundler", 
-    "forceConsistentCasingInFileNames": true 
-}, 
-    "include": 
-    ["src/**/*.ts"], 
-    "exclude": ["node_modules"], 
-    "lib": ["esnext"] 
-}
+{
+    "compilerOptions": {
+      "target": "ESNext",
+      "module": "ESNext",
+      "baseUrl": "./src",
+      "outDir": "./dist",
+      "strict": true,
+      "allowJs": true,
+      "checkJs": false,
+      "esModuleInterop": true,
+      "moduleResolution": "node", // Update this to "node" instead of "bundler"
+      "forceConsistentCasingInFileNames": true,
+      "types": ["node", "express"], // Add types for node and express
+    },
+    "include": ["src/**/*", "src/scripts/login-form.js"],
+    "exclude": ["node_modules"],
+    "lib": ["esnext"]
+  }
+  

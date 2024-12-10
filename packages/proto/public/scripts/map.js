@@ -1,7 +1,5 @@
 import { horrorLocations } from './location.js';
 console.log("Imported horrorLocations:", horrorLocations);
-
-
 // Initialize the map
 var map = L.map('map').setView([39.8283, -98.5795], 4); // Center on the USA
 
@@ -188,3 +186,95 @@ var searchControl = new L.Control.Search({
     textPlaceholder: "Search horror locations...",
 });
 map.addControl(searchControl);
+
+
+// Handle search input
+document.getElementById('search').addEventListener('click', function () {
+    const query = document.getElementById('search-input').value.trim().toLowerCase();
+
+    const foundLocation = horrorLocations.find(loc =>
+        loc.api_data?.city?.toLowerCase().includes(query) || 
+        loc.api_data?.title?.toLowerCase().includes(query)
+    );
+
+    if (foundLocation) {
+        const { x, y } = foundLocation.geometry;
+        const [latitude, longitude] = webMercatorToLatLng(x, y);
+
+        map.setView([latitude, longitude], 12);
+        L.marker([latitude, longitude], { icon: redIcon })
+            .addTo(map)
+            .bindPopup(`
+                <strong>${foundLocation.api_data.title}</strong><br>
+                ${foundLocation.api_data.description}`)
+            .openPopup();
+    } else {
+        alert('Location not found!');
+    }
+});
+document.getElementById('add-location-btn').addEventListener('click', () => {
+    // Show the form
+    document.getElementById('location-form').style.display = 'block';
+});
+
+document.getElementById('cancel-form').addEventListener('click', () => {
+    // Hide the form
+    document.getElementById('location-form').style.display = 'none';
+});
+
+document.getElementById('add-location-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById('location-name').value;
+    const description = document.getElementById('location-description').value;
+    const latitude = parseFloat(document.getElementById('latitude').value);
+    const longitude = parseFloat(document.getElementById('longitude').value);
+    const [x, y] = latLngToWebMercator(latitude, longitude);
+
+    const newLocation = {
+        original: { ObjectId: horrorLocations.length + 1, location_type: "unknown" },
+        geometry: { x, y },
+        api_data: {
+            title: name,
+            description,
+            city: "Unknown",
+            state: "Unknown",
+        },
+    };
+
+    try {
+        const response = await fetch('/add-location', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newLocation),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to save location');
+        }
+
+        // Update the map immediately
+        L.marker([latitude, longitude], { icon: redIcon })
+            .addTo(map)
+            .bindPopup(`<strong>${name}</strong><br>${description}`)
+            .openPopup();
+
+        // Reset the form
+        document.getElementById('add-location-form').reset();
+        document.getElementById('location-form').style.display = 'none';
+
+        Toastify({
+            text: "New haunted location added!",
+            backgroundColor: "linear-gradient(to right, #FF5252, #FF8A80)",
+            duration: 3000,
+        }).showToast();
+    } catch (error) {
+        alert('Error: ' + error.message);
+    }
+    function latLngToWebMercator(lat, lon) {
+        const RADIUS = 6378137; // Earth's radius in meters for Web Mercator
+        const x = lon * (Math.PI / 180) * RADIUS;
+        const y = Math.log(Math.tan((Math.PI / 4) + (lat * (Math.PI / 180) / 2))) * RADIUS;
+        return [x, y];
+    }
+});

@@ -3,29 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Find haunted locations near you. Discover spooky places 
-    with detailed info and user reviews.">
+    <meta name="description" content="Find haunted locations near you. Discover spooky places with detailed info and user reviews.">
     <title>Haunted Location Finder</title>
-    <link rel="stylesheet" href="styles.css">
+    <script type="module" src="history.js"></script>
+
 </head>
-
-<body>
-  <div  style="flex-wrap:wrap; flex-direction: column;">
-    <a href="../index.html">Home</a> >
-    <a href="history.html">History</a> >
-  </div>
-
-  <h1>History:</h1>
-
-  <p> This is a scrollable description of the place. Lorem ipsum dolor sit amet, 
-    consectetur adipiscing elit. Vestibulum quis orci vel elit fermentum venenatis. 
-    Integer dignissim bibendum neque, vel pulvinar erat bibendum non. Praesent malesuada, l
-    ibero id varius vehicula, risus ipsum volutpat sem, et commodo leo magna at erat. Integer 
-    quis quam non purus fermentum suscipit. Nam nec risus in elit eleifend egestas.</p>
+<body style="background-color: black; color: white;">
+<mu-history provides="blazing:history">
+    <haunted-location-finder></haunted-location-finder>
+    <mu-switch></mu-switch>
+  </mu-history>
 </body>
-
-<footer>
-    <div class="footer">
-      <p>&copy; 2024 Haunted Location Finder. All rights reserved. Hujoe Pandi Selvan</p>
-    </div>
-</footer>
+</html>

@@ -1,8 +1,8 @@
 import { css, html } from "@calpoly/mustang/server";
-import { HorrorLocation } from "../models";
+import { HorrorLocation } from "../models/mongointerface";
 import renderPage from "./renderPage"; // generic page renderer
 
-// Updated to reflect the HorrorLocation interface structure.
+// Class to render the HorrorLocationPage
 export class HorrorLocationPage {
   data: HorrorLocation;
 
